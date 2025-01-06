@@ -1,7 +1,4 @@
-import requests
-import os
-import zipfile
-import shutil
+import subprocess, requests, os, zipfile, shutil, inspect
 from packaging import version
 
 class githupdate:
@@ -52,9 +49,12 @@ class githupdate:
         os.remove(file_path)
 
     def update(self, current_version):
+        caller = inspect.stack()[1]
+        callerpath = caller.filename
         extract_to=self.dir2update
         if self.is_latest_version(current_version):
             return
         file_path = self.download_latest_release()
         self.extract_zip(file_path, extract_to)
         shutil.rmtree(self.download_path)
+        subprocess.Popen(f'python {callerpath}')
